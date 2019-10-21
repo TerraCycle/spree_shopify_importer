@@ -36,7 +36,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'codeclimate-test-reporter'
   s.add_development_dependency 'coffee-rails'
   s.add_development_dependency 'database_cleaner'
-  s.add_development_dependency 'factory_bot_rails'
+  s.add_development_dependency 'factory_bot', '~> 4.7'
   s.add_development_dependency 'ffaker'
   s.add_development_dependency 'guard'
   s.add_development_dependency 'guard-bundler'
