@@ -2,11 +2,11 @@ module SpreeShopifyImporter
   module DataSavers
     module Zones
       class ZoneBase < BaseDataSaver
-        delegate :attributes
+        delegate :attributes, to: :parser
 
         private
 
-        def assign_spree_shipping_zone_to_data_feed
+        def assign_spree_zone_to_data_feed
           @shopify_data_feed.update!(spree_object: @spree_zone)
         end
 

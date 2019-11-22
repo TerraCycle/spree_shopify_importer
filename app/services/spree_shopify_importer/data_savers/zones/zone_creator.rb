@@ -6,14 +6,15 @@ module SpreeShopifyImporter
           Spree::Zone.transaction do
             @spree_zone = create_spree_zone
             assign_spree_zone_to_data_feed
-            create_spree_addresses
+            # create tax_rates
+            # create shipping_categories
           end
         end
 
         private
 
         def create_spree_zone
-          zone = Spree.zone_class.new(merged_attributes)
+          zone = Spree::Zone.new(merged_attributes)
           zone.save!
           zone
         end
