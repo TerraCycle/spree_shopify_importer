@@ -23,7 +23,7 @@ module SpreeShopifyImporter
         end
 
         def options
-          @options ||= @shopify_product.options
+          @options ||= @shopify_product.options.reverse.uniq(&:values)
         end
 
         private
