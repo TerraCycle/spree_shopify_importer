@@ -2,9 +2,7 @@ module SpreeShopifyImporter
   class Invoker
     ROOT_FETCHERS = [
       SpreeShopifyImporter::DataFetchers::ProductsFetcher,
-      SpreeShopifyImporter::DataFetchers::UsersFetcher,
-      SpreeShopifyImporter::DataFetchers::TaxonsFetcher,
-      SpreeShopifyImporter::DataFetchers::OrdersFetcher
+      SpreeShopifyImporter::DataFetchers::TaxonsFetcher
     ].freeze
 # TO DO: fetching api_version and setting as shopify_api_version
     def initialize(credentials: nil)
