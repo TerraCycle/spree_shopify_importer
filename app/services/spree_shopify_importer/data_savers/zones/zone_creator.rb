@@ -6,6 +6,7 @@ module SpreeShopifyImporter
           Spree::Zone.transaction do
             @spree_zone = create_spree_zone
             assign_spree_zone_to_data_feed
+            create_spree_zone_members
             # create tax_rates
             # create shipping_categories
           end
@@ -20,6 +21,8 @@ module SpreeShopifyImporter
         end
 
         def merged_attributes
+          # tutaj sobie też posprawdzaj co jest
+          # binding.pry
           attributes
             .select { |a| Spree::Zone.attribute_method?(a) }
         end

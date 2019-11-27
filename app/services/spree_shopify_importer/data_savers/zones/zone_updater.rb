@@ -11,6 +11,9 @@ module SpreeShopifyImporter
           Spree::Zone.transaction do
             update_spree_zone
           end
+          create_spree_zone_members
+          # create tax_rates
+          # create shipping_categories
         end
 
         private
@@ -20,6 +23,8 @@ module SpreeShopifyImporter
         end
 
         def merged_attributes
+          # binding.pry
+          # attributes => {:name=>"Domestic", :description=>"shopify shipping to Poland", :kind=>"country"}
           attributes.select { |a| Spree::Zone.attribute_method?(a) }
         end
       end
