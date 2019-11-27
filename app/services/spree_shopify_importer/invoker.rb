@@ -4,10 +4,7 @@ module SpreeShopifyImporter
       SpreeShopifyImporter::DataFetchers::ShopFetcher,
       SpreeShopifyImporter::DataFetchers::StockLocationsFetcher,
       SpreeShopifyImporter::DataFetchers::ProductsFetcher,
-      SpreeShopifyImporter::DataFetchers::ShopifyZonesFetcher,
-      SpreeShopifyImporter::DataFetchers::UsersFetcher,
-      SpreeShopifyImporter::DataFetchers::TaxonsFetcher,
-      SpreeShopifyImporter::DataFetchers::OrdersFetcher
+      SpreeShopifyImporter::DataFetchers::TaxonsFetcher
     ].freeze
 
     def initialize(credentials: nil)
