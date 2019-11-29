@@ -14,7 +14,8 @@ module SpreeShopifyImporter
             slug: @shopify_product.handle,
             price: @shopify_product.variants.first.try(:price) || 0,
             created_at: @shopify_product.created_at,
-            shipping_category: shipping_category
+            shipping_category: shipping_category,
+            stores: [store]
           }
         end
 
@@ -30,6 +31,10 @@ module SpreeShopifyImporter
 
         def shipping_category
           Spree::ShippingCategory.find_or_create_by!(name: I18n.t(:shopify))
+        end
+
+        def store
+          Spree::Store.find_or_create_by!(code: @shopify_product.store)
         end
 
         def option_values(values)
