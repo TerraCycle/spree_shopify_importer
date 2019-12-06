@@ -2,6 +2,17 @@ module SpreeShopifyImporter
   module DataParsers
     module Products
       class BaseData
+        PROTOTYPES = {
+            zero_waste_pallet: 'Zero Waste Pallet™',
+            zero_waste_pouch: 'Zero Waste Pouch™',
+            zero_waste_bag:'Zero Waste Bag™',
+            zero_waste_supplies: 'Supplies',
+            hazardous_box: 'Zero Waste Hazardous Box™',
+            box: 'Zero Waste Box™',
+            cigarette_receptacle: 'Cigarette Receptacle',
+            recycling_container: 'Recycling Container'
+        }.freeze
+
         def initialize(shopify_product)
           @shopify_product = shopify_product
         end
@@ -14,7 +25,9 @@ module SpreeShopifyImporter
             slug: @shopify_product.handle,
             price: @shopify_product.variants.first.try(:price) || 0,
             created_at: @shopify_product.created_at,
-            shipping_category: shipping_category
+            shipping_category: shipping_category,
+            stores: [store],
+            prototype_id: prototype_id
           }
         end
 
@@ -23,13 +36,24 @@ module SpreeShopifyImporter
         end
 
         def options
-          @options ||= @shopify_product.options
+          @options ||= @shopify_product.options.reverse.uniq(&:values)
         end
 
         private
 
         def shipping_category
           Spree::ShippingCategory.find_or_create_by!(name: I18n.t(:shopify))
+        end
+
+        def store
+          Spree::Store.find_by(code: @shopify_product.store) || Spree::Store.default
+        end
+
+        def prototype_id
+          PROTOTYPES.each do |search, name|
+            return Spree::Prototype.find_by(name: name)&.id if @shopify_product.title.include?(search.to_s.titleize)
+          end
+          nil
         end
 
         def option_values(values)

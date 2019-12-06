@@ -4,13 +4,11 @@ module SpreeShopifyImporter
       SpreeShopifyImporter::DataFetchers::ShopFetcher,
       SpreeShopifyImporter::DataFetchers::StockLocationsFetcher,
       SpreeShopifyImporter::DataFetchers::ProductsFetcher,
-      SpreeShopifyImporter::DataFetchers::ShopifyZonesFetcher,
-      SpreeShopifyImporter::DataFetchers::UsersFetcher,
-      SpreeShopifyImporter::DataFetchers::TaxonsFetcher,
-      SpreeShopifyImporter::DataFetchers::OrdersFetcher
+      SpreeShopifyImporter::DataFetchers::TaxonsFetcher
     ].freeze
-
-    def initialize(credentials: nil)
+# TO DO: fetching api_version and setting as shopify_api_version
+    def initialize(store: nil, credentials: nil)
+      @store = store
       @credentials = credentials
       @credentials ||= {
         api_key: Spree::Config[:shopify_api_key],
@@ -40,7 +38,7 @@ module SpreeShopifyImporter
 
     def initiate_import!
       ROOT_FETCHERS.each do |fetchers|
-        fetchers.new.import!
+        fetchers.new(store: @store).import!
       end
     end
   end
