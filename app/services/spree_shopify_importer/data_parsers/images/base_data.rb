@@ -1,5 +1,3 @@
-require 'curb'
-
 module SpreeShopifyImporter
   module DataParsers
     module Images
@@ -31,14 +29,10 @@ module SpreeShopifyImporter
         end
 
         def valid_path?
-          @shopify_image.src.present? && content_is_image?
+          @shopify_image.src.present?
         end
 
         private
-
-        def content_is_image?
-          Curl::Easy.http_head(URI.parse(uri).to_s).content_type.starts_with?('image')
-        end
 
         def uri
           @uri ||= Addressable::URI.escape(@shopify_image.src)
