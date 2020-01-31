@@ -42,7 +42,11 @@ module SpreeShopifyImporter
         private
 
         def shipping_category
-          Spree::ShippingCategory.find_or_create_by!(name: I18n.t(:shopify))
+          if @shopify_product.shipping_category
+            Spree::ShippingCategory.find_or_create_by!(name: @shopify_product.shipping_category)
+          else
+            Spree::ShippingCategory.find_or_create_by!(name: I18n.t(:shopify))
+          end
         end
 
         def store
