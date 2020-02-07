@@ -1,3 +1,5 @@
+require 'sanitize'
+
 module SpreeShopifyImporter
   module DataParsers
     module Products
@@ -20,7 +22,7 @@ module SpreeShopifyImporter
         def attributes
           @attributes ||= {
             name: @shopify_product.title,
-            description: @shopify_product.body_html,
+            description: description(@shopify_product.body_html),
             available_on: @shopify_product.published_at,
             slug: @shopify_product.handle,
             price: @shopify_product.variants.first.try(:price) || 0,
@@ -40,6 +42,19 @@ module SpreeShopifyImporter
         end
 
         private
+
+        def description(html)
+          Sanitize.fragment(
+            html,
+            Sanitize::Config.merge(Sanitize::Config::BASIC,
+              elements: Sanitize::Config::BASIC[:elements] +
+                %w[h2 h3 html head meta base div link br body table tbody tr td caption img video
+                source li ul ol blockquote a b del em i ins mark p small strong sub sup span],
+              attributes:{all: %w[type style class id title target poster alt width height controls
+                  border data-id contenteditable unselectable cellpadding cellspacing spellcheck src
+                  data-mce-style data-mce-selected data-mce-bogus data-mce-href href]},
+              remove_contents: %w[script noscript style]))
+        end
 
         def shipping_category
           if @shopify_product.shipping_category
