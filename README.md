@@ -81,7 +81,7 @@ With default values
 or with credentials.
 
 ```ruby
- SpreeShopifyImporter::Invoker.new(store: '', credentials: {}).import!
+ SpreeShopifyImporter::Invoker.new(credentials: {}, options: {store: '', shipping_category: ''}).import!
 ```
 Where store represents the store's code in spree. If it's not set, default store will be used
 
