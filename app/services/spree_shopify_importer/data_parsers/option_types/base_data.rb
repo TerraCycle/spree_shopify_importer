@@ -3,6 +3,8 @@ module SpreeShopifyImporter
     module OptionTypes
       class BaseData
         def initialize(option_type)
+          option_type.attributes[:name] = 'Size' if option_type.attributes[:name] == 'Title'
+
           @option_type = option_type
         end
 
