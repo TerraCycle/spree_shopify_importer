@@ -22,10 +22,14 @@ module SpreeShopifyImporter
         end
 
         def taxonomy
-          @taxonomy ||= Spree::Taxonomy.find_or_create_by(name: I18n.t(:shopify_custom_collections))
+          @taxonomy ||= Spree::Taxonomy.find_or_create_by(name: I18n.t(:shopify_custom_collections), store: store)
         end
 
         private
+
+        def store
+          Spree::Store.find_by(code: @shopify_custom_collection.store) || Spree::Store.default
+        end
 
         def collection_product_ids
           @shopify_custom_collection.products.map(&:id)
