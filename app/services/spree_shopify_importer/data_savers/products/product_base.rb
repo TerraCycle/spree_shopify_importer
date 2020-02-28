@@ -2,7 +2,7 @@ module SpreeShopifyImporter
   module DataSavers
     module Products
       class ProductBase < BaseDataSaver
-        delegate :attributes, :tags, :options, to: :parser
+        delegate :attributes, :tags, :options, :store, to: :parser
 
         private
 
