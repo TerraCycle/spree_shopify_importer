@@ -17,7 +17,7 @@ module SpreeShopifyImporter
         private
 
         def update_spree_taxon
-          @spree_taxon.update!(attributes.merge(parent: taxonomy.root))
+          @spree_taxon.update!(attributes.merge(parent: taxonomy.root, taxonomy: taxonomy))
         end
       end
     end

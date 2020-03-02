@@ -13,7 +13,7 @@ module SpreeShopifyImporter
         private
 
         def create_spree_taxon
-          @spree_taxon = Spree::Taxon.create!(attributes.merge(parent: taxonomy.root))
+          @spree_taxon = Spree::Taxon.create!(attributes.merge(parent: taxonomy.root, taxonomy: taxonomy))
         end
       end
     end
