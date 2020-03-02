@@ -17,7 +17,9 @@ module SpreeShopifyImporter
         private
 
         def create_spree_product
-          Spree::Product.create!(attributes)
+          product = Spree::Product.create!(attributes)
+          product.stores << store
+          product
         end
       end
     end

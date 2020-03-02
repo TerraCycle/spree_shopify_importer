@@ -28,7 +28,6 @@ module SpreeShopifyImporter
             price: @shopify_product.variants.first.try(:price) || 0,
             created_at: @shopify_product.created_at,
             shipping_category: shipping_category,
-            stores: [store],
             prototype_id: prototype_id
           }
         end
@@ -39,6 +38,10 @@ module SpreeShopifyImporter
 
         def options
           @options ||= @shopify_product.options.reverse.uniq(&:values)
+        end
+
+        def store
+          Spree::Store.find_by(code: @shopify_product.store) || Spree::Store.default
         end
 
         private
@@ -62,10 +65,6 @@ module SpreeShopifyImporter
           else
             Spree::ShippingCategory.find_or_create_by!(name: I18n.t(:shopify))
           end
-        end
-
-        def store
-          Spree::Store.find_by(code: @shopify_product.store) || Spree::Store.default
         end
 
         def prototype_id
