@@ -1,6 +1,8 @@
 module SpreeShopifyImporter
   class Invoker
     ROOT_FETCHERS = [
+      SpreeShopifyImporter::DataFetchers::ShopFetcher,
+      SpreeShopifyImporter::DataFetchers::StockLocationsFetcher,
       SpreeShopifyImporter::DataFetchers::ProductsFetcher,
       SpreeShopifyImporter::DataFetchers::TaxonsFetcher
     ].freeze
@@ -34,7 +36,6 @@ module SpreeShopifyImporter
       Spree::Config[:shopify_current_credentials] = @credentials
     end
 
-    # TODO: custom params for fetchers
     def initiate_import!
       ROOT_FETCHERS.each do |fetchers|
         fetchers.new(@options).import!

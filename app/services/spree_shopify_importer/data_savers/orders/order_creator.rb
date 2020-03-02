@@ -5,7 +5,6 @@ module SpreeShopifyImporter
       class OrderCreator < BaseDataSaver
         delegate :user, :attributes, :timestamps, to: :parser
 
-        # rubocop:disable Metrics/MethodLength
         def save!
           Spree::Order.transaction do
             @spree_order = create_spree_order
@@ -13,14 +12,12 @@ module SpreeShopifyImporter
             create_spree_line_items
             create_spree_payments
             create_spree_shipments
-            create_spree_taxes
             create_spree_promotions
             create_spree_addresses
             create_spree_refunds
           end
           @spree_order.update_columns(timestamps)
         end
-        # rubocop:enable Metrics/MethodLength
 
         private
 
@@ -90,19 +87,6 @@ module SpreeShopifyImporter
           end
         end
 
-        def create_spree_taxes
-          shopify_order.tax_lines.each do |shopify_tax_line|
-            spree_tax_rate = create_tax_rate(shopify_tax_line)
-            SpreeShopifyImporter::DataSavers::Adjustments::TaxCreator.new(shopify_tax_line,
-                                                                          @spree_order,
-                                                                          spree_tax_rate).create!
-          end
-        end
-
-        def create_tax_rate(shopify_tax_line)
-          SpreeShopifyImporter::DataSavers::TaxRates::TaxRateCreator.new(shopify_tax_line, billing_address).create!
-        end
-
         def create_spree_promotions
           shopify_order.discount_codes.each do |shopify_discount_code|
             promotion = create_promotion(shopify_discount_code)
@@ -123,6 +107,7 @@ module SpreeShopifyImporter
         end
 
         def create_bill_addreess
+          return if billing_address.blank?
 
           # HACK: shopify order address does not have id, so i'm not saving data feed.
           address_data_feed = SpreeShopifyImporter::DataFeed.new(data_feed: billing_address.to_json)
@@ -217,14 +202,14 @@ module SpreeShopifyImporter
 
         def billing_address
           if data_feed['billing_address']
-            @billing_address ||= shopify_order.billing_address
+            @billing_address ||= shopify_order.try(:billing_address)
           else
-            @billing_address ||= shopify_order.shipping_address
+            @billing_address ||= shopify_order.try(:shipping_address)
           end
         end
 
         def ship_address
-          @ship_address ||= shopify_order.shipping_address
+          @ship_address ||= shopify_order.try(:shipping_address)
         end
 
         def parser

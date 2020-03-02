@@ -24,7 +24,9 @@ RSpec.describe SpreeShopifyImporter::DataSavers::Variants::VariantCreator, type:
 
   subject { described_class.new(shopify_data_feed, spree_product) }
 
-  before { spree_product.option_types << option_type }
+  before  do
+    spree_product.option_types << option_type
+  end
 
   describe '#create!!' do
     it 'creates spree variant' do

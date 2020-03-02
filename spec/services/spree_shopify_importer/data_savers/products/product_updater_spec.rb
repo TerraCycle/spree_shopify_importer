@@ -4,7 +4,13 @@ describe SpreeShopifyImporter::DataSavers::Products::ProductUpdater, type: :serv
   include ActiveJob::TestHelper
 
   subject { described_class.new(product_data_feed, spree_product) }
-  before  { authenticate_with_shopify }
+
+  let(:delivery_profile_importer) { instance_double(SpreeShopifyImporter::Importers::DeliveryProfileImporter) }
+  before  do
+    authenticate_with_shopify
+    expect(SpreeShopifyImporter::Importers::DeliveryProfileImporter).to receive(:new).and_return(delivery_profile_importer)
+    expect(delivery_profile_importer).to receive(:call)
+  end
   after   { ShopifyAPI::Base.clear_session }
 
   describe '#update!' do
@@ -110,7 +116,7 @@ describe SpreeShopifyImporter::DataSavers::Products::ProductUpdater, type: :serv
             perform_enqueued_jobs do
               subject.update!
             end
-          end.to change(Spree::Image, :count).by(1)
+          end.to change(Spree::Image, :count).by(2)
         end
 
         it 'assings variants to product' do
@@ -128,7 +134,7 @@ describe SpreeShopifyImporter::DataSavers::Products::ProductUpdater, type: :serv
             perform_enqueued_jobs do
               subject.update!
             end
-          end.to change { SpreeShopifyImporter::DataFeed.where(image_scope).reload.count }.by(1)
+          end.to change { SpreeShopifyImporter::DataFeed.where(image_scope).reload.count }.by(2)
         end
       end
 
